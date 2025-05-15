@@ -430,3 +430,5 @@ The API returns a detailed analysis of the video:
 - The MELD dataset creators for providing the multimodal emotion dataset
 - The PyTorch team for the deep learning framework
 - The Next.js team for the React framework
+
+### Author: Jay Mewada
