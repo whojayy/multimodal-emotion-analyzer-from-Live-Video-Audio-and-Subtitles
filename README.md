@@ -405,9 +405,7 @@ The API returns a detailed analysis of the video:
 - AWS IAM - Access management
 
 
-## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
