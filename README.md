@@ -2,7 +2,7 @@
 
 A comprehensive SaaS platform for analyzing emotions and sentiments in videos using a multimodal deep learning approach. This project combines video frame analysis, audio processing, and text transcription to provide accurate emotion and sentiment detection.
 
-![Model Architecture](/Model_Working.png)
+
 
 ## 📋 Table of Contents
 
