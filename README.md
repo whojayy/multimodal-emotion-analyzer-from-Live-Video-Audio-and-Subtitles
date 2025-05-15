@@ -2,7 +2,7 @@
 
 A comprehensive SaaS platform for analyzing emotions and sentiments in videos using a multimodal deep learning approach. This project combines video frame analysis, audio processing, and text transcription to provide accurate emotion and sentiment detection.
 
-![Model Architecture](Model_Working.png)
+![Model Architecture](/Model_Working.png)
 
 ## 📋 Table of Contents
 
@@ -49,41 +49,8 @@ The system extracts frames from videos, transcribes speech, and analyzes audio p
 - 📱 Responsive design for all devices
 - 📄 API documentation and code examples
 
-## 📁 Project Structure
-
-The project is organized into two main directories:
-
-```plaintext
-ai-video-sentiment-saas/
-├── ai-video-sentiment-model/     # ML model component
-│   ├── dataset/                  # MELD dataset and preprocessing
-│   ├── deployment/               # Model deployment scripts
-│   │   ├── models.py             # Model architecture for inference
-│   │   ├── inference.py          # Inference pipeline
-│   │   ├── deploy_endpoint.py    # Endpoint deployment script
-│   │   └── requirements.txt      # Deployment dependencies
-│   └── training/                 # Model training scripts
-│       ├── models.py             # Model architecture definition
-│       ├── meld_dataset.py       # Dataset loader
-│       ├── train.py              # Training script
-│       └── requirements.txt      # Training dependencies
-├── prisma/                       # Database schema and migrations
-├── public/                       # Static assets
-├── src/                          # SaaS web application
-│   ├── actions/                  # Server actions
-│   ├── app/                      # Next.js app router
-│   ├── components/               # React components
-│   ├── lib/                      # Utility functions
-│   ├── schemas/                  # Validation schemas
-│   ├── server/                   # Server-side code
-│   └── styles/                   # CSS styles
-└── Model_Working.png             # Model architecture diagram
-
 ## 🧠 Model Architecture
-
-
-
-
+![Alt text](/Model_Working.png)
 
 The diagram above illustrates our multimodal approach to emotion and sentiment analysis. The architecture consists of three parallel encoding pathways (video, text, audio) that are later fused to make predictions.
 
@@ -196,3 +163,256 @@ The SaaS platform provides a user-friendly interface for accessing the video sen
 - Python 3.9+
 - AWS account (for model deployment)
 - PostgreSQL or SQLite database
+
+
+### Installation Steps
+
+1. Clone the repository:
+
+
+```shellscript
+git clone https://github.com/whojayy/multimodal-emotion-analyzer-with-aid-of-Video-Text-and-Voice.git
+cd multimodal-emotion-analyzer-with-aid-of-Video-Text-and-Voice
+```
+
+2. Install dependencies for the SaaS platform:
+
+
+```shellscript
+npm install
+```
+
+3. Set up environment variables:
+
+
+```plaintext
+DATABASE_URL="your-database-url"
+AUTH_SECRET="your-auth-secret"
+AWS_REGION="your-aws-region"
+AWS_ACCESS_KEY_ID="your-access-key"
+AWS_SECRET_ACCESS_KEY="your-secret-key"
+AWS_INFERENCE_BUCKET="your-bucket-name"
+AWS_ENDPOINT_NAME="your-endpoint-name"
+```
+
+4. Initialize the database:
+
+
+```shellscript
+npx prisma generate
+npx prisma db push
+```
+
+5. Install Python dependencies for the model (if working with the model locally):
+
+
+```shellscript
+cd ai-video-sentiment-model/training
+pip install -r requirements.txt
+```
+
+6. Start the development server:
+
+
+```shellscript
+npm run dev
+```
+
+## 🧪 Training the Model
+
+### Dataset Preparation
+
+The model is trained on the MELD dataset (Multimodal EmotionLines Dataset), which contains:
+
+- 13,000+ utterances from Friends TV series
+- 7 emotion labels and 3 sentiment labels
+- Video, audio, and text for each utterance
+
+
+1. Download the MELD dataset from the official source
+2. Extract and place it in the `ai-video-sentiment-model/dataset` directory
+3. Preprocess the dataset using the provided scripts
+
+
+### Training Process
+
+1. Configure training parameters in `train.py`
+2. Start the training process:
+
+
+```shellscript
+cd ai-video-sentiment-model
+python training/train.py
+```
+
+3. Monitor training progress with TensorBoard:
+
+
+```shellscript
+tensorboard --logdir runs/
+```
+
+4. The best model will be saved based on validation loss
+
+
+### Training on AWS SageMaker
+
+For large-scale training, the model can be trained on AWS SageMaker:
+
+1. Configure SageMaker settings in `train_sagemaker.py`
+2. Upload the dataset to an S3 bucket
+3. Run the SageMaker training job:
+
+
+```shellscript
+python train_sagemaker.py
+```
+
+## 📊 Deploying the Model
+
+### Local Deployment
+
+For testing and development, you can run inference locally:
+
+```shellscript
+cd ai-video-sentiment-model/deployment
+python inference.py --video_path path/to/video.mp4
+```
+
+### Cloud Deployment
+
+For production use, deploy the model as an endpoint:
+
+1. Package the model artifacts
+2. Configure deployment settings in `deploy_endpoint.py`
+3. Deploy the model:
+
+
+```shellscript
+cd ai-video-sentiment-model/deployment
+python deploy_endpoint.py
+```
+
+4. The endpoint will be available for inference through the SaaS platform
+
+
+## 🔌 API Usage
+
+### Authentication
+
+All API requests require an API key for authentication:
+
+```shellscript
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"fileType": ".mp4"}' \
+  /api/upload-url
+```
+
+### Video Analysis
+
+The API follows a three-step process:
+
+1. Get a signed upload URL:
+
+
+```shellscript
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"fileType": ".mp4"}' \
+  /api/upload-url
+```
+
+2. Upload the video to the provided URL:
+
+
+```shellscript
+curl -X PUT \
+  -H "Content-Type: video/mp4" \
+  --data-binary @video.mp4 \
+  "SIGNED_URL"
+```
+
+3. Analyze the video:
+
+
+```shellscript
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"key": "FILE_KEY"}' \
+  /api/sentiment-inference
+```
+
+### Response Format
+
+The API returns a detailed analysis of the video:
+
+```json
+{
+  "analysis": {
+    "utterances": [
+      {
+        "start_time": 0.5,
+        "end_time": 3.2,
+        "text": "I can't believe this happened!",
+        "emotions": [
+          {"label": "surprise", "confidence": 0.85},
+          {"label": "joy", "confidence": 0.10},
+          {"label": "neutral", "confidence": 0.05}
+        ],
+        "sentiments": [
+          {"label": "positive", "confidence": 0.75},
+          {"label": "neutral", "confidence": 0.20},
+          {"label": "negative", "confidence": 0.05}
+        ]
+      }
+    ]
+  }
+}
+```
+
+## 🛠️ Technologies Used
+
+### Machine Learning
+
+- PyTorch - Deep learning framework
+- torchvision - Computer vision library
+- torchaudio - Audio processing library
+- transformers - NLP models including BERT
+- OpenAI Whisper - Speech recognition
+- scikit-learn - Evaluation metrics
+- TensorBoard - Training visualization
+
+
+### Web Development
+
+- Next.js - React framework
+- TypeScript - Type-safe JavaScript
+- Tailwind CSS - Utility-first CSS framework
+- Prisma - Type-safe ORM
+- Auth.js - Authentication library
+- React Hook Form - Form validation
+- Zod - Schema validation
+
+
+### Cloud Infrastructure
+
+- AWS S3 - Video storage
+- AWS SageMaker - Model training and deployment
+- AWS IAM - Access management
+
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## Acknowledgements
+
+- The MELD dataset creators for providing the multimodal emotion dataset
+- The PyTorch team for the deep learning framework
+- The Next.js team for the React framework
