@@ -49,7 +49,23 @@ The system extracts frames from videos, transcribes speech, and analyzes audio p
 - 📱 Responsive design for all devices
 - 📄 API documentation and code examples
 
+
+## Dataset Class Architecture
+![Dataset Class Architecture](/Database.png)
+
+The Dataset class is the foundation of our data processing pipeline. It handles loading and preprocessing of multimodal data from various sources. As shown in the diagram, the class accepts CSV file paths and video file paths as inputs, then processes them through several stages. It maps sentiment and emotion labels to numerical values, extracts features from text (tokenization), video (frame extraction with RGB normalization), and audio (mel spectrogram generation). This architecture ensures that all data is properly normalized and formatted before being fed into the neural network, which is crucial for effective multimodal learning.
+
 ## 🧠 Model Architecture
+
+![Alt text](/ModelArchitecture.png)
+
+The model architecture illustrates our multimodal approach to emotion and sentiment analysis. It consists of three parallel encoding pathways that process different data modalities:
+1. **Video Pathway**: Processes extracted frames through 3D convolutional networks to capture spatial-temporal patterns
+2. **Text Pathway**: Uses embedding layers and projection to extract semantic features from transcribed speech
+3. **Audio Pathway**: Analyzes mel spectrograms through multiple convolutional and batch normalization layers
+
+These pathways are fused together in the "Concatenate data" stage, where features from all modalities are combined and processed through additional layers for final emotion and sentiment classification. The bottom section shows the optimizer, loss function, and learning rate scheduler components used during training.
+
 ![Alt text](/Model_Working.png)
 
 The diagram above illustrates our multimodal approach to emotion and sentiment analysis. The architecture consists of three parallel encoding pathways (video, text, audio) that are later fused to make predictions.
