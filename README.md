@@ -57,7 +57,7 @@ The Dataset class is the foundation of our data processing pipeline. It handles 
 
 ## 🧠 Model Architecture
 
-![Alt text](/ModelArchitecture.png)
+![Alt text](/Model1.png)
 
 The model architecture illustrates our multimodal approach to emotion and sentiment analysis. It consists of three parallel encoding pathways that process different data modalities:
 1. **Video Pathway**: Processes extracted frames through 3D convolutional networks to capture spatial-temporal patterns
